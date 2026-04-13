@@ -1,0 +1,7 @@
+*.obj
+*.exe
+*.wav
+tools/*.exe
+SDL2-*/
+raylib-*/
+.claude/

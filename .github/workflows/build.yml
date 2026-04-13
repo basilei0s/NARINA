@@ -1,0 +1,91 @@
+name: Build
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install NASM
+        run: choco install nasm -y
+
+      - name: Download SDL2
+        shell: bash
+        run: |
+          curl -L https://github.com/libsdl-org/SDL/releases/download/release-2.32.6/SDL2-devel-2.32.6-mingw.zip -o sdl2.zip
+          unzip sdl2.zip
+
+      - name: Build
+        shell: bash
+        run: |
+          export PATH="/c/Program Files/NASM:$PATH"
+          SDL2_INC="SDL2-2.32.6/x86_64-w64-mingw32/include/SDL2"
+          SDL2_LIB="SDL2-2.32.6/x86_64-w64-mingw32/lib"
+          CFLAGS="-Os -Wall -std=c99 -flto -ffunction-sections -fdata-sections -fno-unwind-tables -fno-asynchronous-unwind-tables -I$SDL2_INC"
+          nasm -f win64 src/dsp.asm -o dsp.obj
+          gcc $CFLAGS -c src/main.c -o main.obj
+          gcc $CFLAGS -c src/audio.c -o audio.obj
+          windres src/narina.rc -o res.obj
+          gcc main.obj audio.obj dsp.obj res.obj -o narina.exe \
+            -L"$SDL2_LIB" -lmingw32 -lSDL2main -lSDL2 -mwindows -s -flto \
+            -Wl,--gc-sections -static -lsetupapi -lole32 -loleaut32 -limm32 -lversion -lgdi32 -lwinmm -luser32
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: narina-windows
+          path: narina.exe
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL2
+        run: brew install sdl2
+
+      - name: Build
+        run: |
+          chmod +x build_mac.sh
+          ./build_mac.sh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: narina-macos
+          path: narina
+
+  release:
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: narina-windows
+          path: win
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: narina-macos
+          path: mac
+
+      - name: Prepare release files
+        run: |
+          mv win/narina.exe narina-windows.exe
+          mv mac/narina narina-macos
+          chmod +x narina-macos
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            narina-windows.exe
+            narina-macos
