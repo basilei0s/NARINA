@@ -3,6 +3,8 @@ name: Build
 on:
   push:
     tags: ['v*']
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -62,6 +64,7 @@ jobs:
           # Bundle SDL2 dylib
           SDL2_LIB=$(otool -L narina | grep libSDL2 | awk '{print $1}')
           cp "$SDL2_LIB" NARINA.app/Contents/Frameworks/libSDL2.dylib
+          chmod u+w NARINA.app/Contents/Frameworks/libSDL2.dylib
           strip -x NARINA.app/Contents/Frameworks/libSDL2.dylib
           install_name_tool -change "$SDL2_LIB" @executable_path/../Frameworks/libSDL2.dylib NARINA.app/Contents/MacOS/narina
           # Info.plist
