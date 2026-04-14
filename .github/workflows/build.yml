@@ -4,8 +4,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 on:
-  push:
-    tags: ['v*']
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -101,7 +101,7 @@ jobs:
   release:
     needs: [windows, macos]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'release'
     permissions:
       contents: write
     steps:
@@ -120,9 +120,10 @@ jobs:
           mv win/narina.exe narina-windows.exe
           mv mac/narina-macos.dmg narina-macos.dmg
 
-      - name: Create Release
+      - name: Attach binaries to release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name }}
           files: |
             narina-windows.exe
             narina-macos.dmg
