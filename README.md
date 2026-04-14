@@ -4,6 +4,8 @@ Portable acid techno loop generator. Single .exe, no installation.
 
 ![Windows](https://img.shields.io/badge/platform-Windows%2064--bit-blue)
 
+![screenshot](screenshot.png)
+
 ## What it does
 
 Generates random acid techno loops with one button press. TB-303-style sawtooth oscillator through a resonant SVF filter with envelope modulation. DSP core written in x86-64 NASM assembly.
@@ -81,7 +83,7 @@ Sawtooth osc → Frequency slide → Filter envelope → SVF filter (+ tanh satu
 ### Audio callback flow
 
 ```
-DSP block → Acid highpass (if bass) → Waveform copy → Percussion mix → Volume/mute → Record buffer
+DSP block → Waveform copy → Percussion mix → Volume/mute → Record buffer
 ```
 
 ## License
