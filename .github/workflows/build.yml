@@ -86,6 +86,15 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          generate_release_notes: true
+          body: |
+            Portable acid techno loop generator.
+
+            **Downloads:**
+            - `narina-windows.exe` - Windows 64-bit (standalone, no installation)
+            - `narina-macos` - macOS (requires SDL2: `brew install sdl2`)
+
+            **Features:** 5 styles, 10 scales, 29 rhythm templates, kick/hihat/clap, time signatures, shuffle, WAV recording, tap tempo.
           files: |
             narina-windows.exe
             narina-macos
