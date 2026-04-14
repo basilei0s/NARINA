@@ -6,8 +6,6 @@ env:
 on:
   push:
     tags: ['v*']
-  release:
-    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -39,6 +37,13 @@ jobs:
           gcc main.obj audio.obj dsp.obj res.obj -o narina.exe \
             -L"$SDL2_LIB" -lmingw32 -lSDL2main -lSDL2 -mwindows -s -flto \
             -Wl,--gc-sections -static -lsetupapi -lole32 -loleaut32 -limm32 -lversion -lgdi32 -lwinmm -luser32
+
+      - name: Compress with UPX
+        shell: bash
+        run: |
+          curl -L https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-win64.zip -o upx.zip
+          unzip upx.zip
+          upx-5.0.1-win64/upx.exe --best narina.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -118,15 +123,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
-          body: |
-            Portable acid techno loop generator.
-
-            **Downloads:**
-            - `narina-windows.exe` - Windows 64-bit (standalone, no installation)
-            - `narina-macos.dmg` - macOS app bundle (SDL2 bundled, open and drag to Applications)
-
-            **Features:** 5 styles, 10 scales, 29 rhythm templates, kick/hihat/clap, time signatures, shuffle, WAV recording, tap tempo.
           files: |
             narina-windows.exe
             narina-macos.dmg
