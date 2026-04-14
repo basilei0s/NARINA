@@ -56,21 +56,21 @@ jobs:
 
       - name: Create app bundle
         run: |
-          mkdir -p Narina.app/Contents/MacOS
-          mkdir -p Narina.app/Contents/Frameworks
-          cp narina Narina.app/Contents/MacOS/narina
+          mkdir -p NARINA.app/Contents/MacOS
+          mkdir -p NARINA.app/Contents/Frameworks
+          cp narina NARINA.app/Contents/MacOS/narina
           # Bundle SDL2 dylib
           SDL2_LIB=$(otool -L narina | grep libSDL2 | awk '{print $1}')
-          cp "$SDL2_LIB" Narina.app/Contents/Frameworks/libSDL2.dylib
-          strip -x Narina.app/Contents/Frameworks/libSDL2.dylib
-          install_name_tool -change "$SDL2_LIB" @executable_path/../Frameworks/libSDL2.dylib Narina.app/Contents/MacOS/narina
+          cp "$SDL2_LIB" NARINA.app/Contents/Frameworks/libSDL2.dylib
+          strip -x NARINA.app/Contents/Frameworks/libSDL2.dylib
+          install_name_tool -change "$SDL2_LIB" @executable_path/../Frameworks/libSDL2.dylib NARINA.app/Contents/MacOS/narina
           # Info.plist
-          cat > Narina.app/Contents/Info.plist << 'PLIST'
+          cat > NARINA.app/Contents/Info.plist << 'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
           <plist version="1.0">
           <dict>
-            <key>CFBundleName</key><string>Narina</string>
+            <key>CFBundleName</key><string>NARINA</string>
             <key>CFBundleExecutable</key><string>narina</string>
             <key>CFBundleIdentifier</key><string>com.basilei0s.narina</string>
             <key>CFBundleVersion</key><string>0.1</string>
@@ -78,13 +78,14 @@ jobs:
           </dict>
           </plist>
           PLIST
-          zip -r narina-macos.zip Narina.app
+          # Create DMG
+          hdiutil create -volname "NARINA" -srcfolder NARINA.app -ov -format UDZO narina-macos.dmg
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: narina-macos
-          path: narina-macos.zip
+          path: narina-macos.dmg
 
   release:
     needs: [windows, macos]
@@ -106,7 +107,7 @@ jobs:
       - name: Prepare release files
         run: |
           mv win/narina.exe narina-windows.exe
-          mv mac/narina-macos.zip narina-macos.zip
+          mv mac/narina-macos.dmg narina-macos.dmg
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -117,9 +118,9 @@ jobs:
 
             **Downloads:**
             - `narina-windows.exe` - Windows 64-bit (standalone, no installation)
-            - `narina-macos.zip` - macOS app bundle (SDL2 bundled, just unzip and run)
+            - `narina-macos.dmg` - macOS app bundle (SDL2 bundled, open and drag to Applications)
 
             **Features:** 5 styles, 10 scales, 29 rhythm templates, kick/hihat/clap, time signatures, shuffle, WAV recording, tap tempo.
           files: |
             narina-windows.exe
-            narina-macos.zip
+            narina-macos.dmg
