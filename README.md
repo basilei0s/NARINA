@@ -1,14 +1,21 @@
 # NARINA
 
-Portable acid techno loop generator. Single .exe, no installation.
+Portable acid techno loop generator for Windows. Single .exe, no installation.
 
 ![Windows](https://img.shields.io/badge/platform-Windows%2064--bit-blue)
+![macOS](https://img.shields.io/badge/platform-macOS%20(experimental)-lightgrey)
 
 ![screenshot](screenshot.png)
 
 ## What it does
 
 Generates random acid techno loops with one button press. TB-303-style sawtooth oscillator through a resonant SVF filter with envelope modulation. DSP core written in x86-64 NASM assembly.
+
+## Download
+
+Grab the latest release from the [Releases page](https://github.com/basilei0s/NARINA/releases).
+
+**Windows**: Download `narina-windows.exe` and run it. SmartScreen may warn on first run — click "More info" → "Run anyway".
 
 ## Features
 
@@ -37,7 +44,7 @@ Generates random acid techno loops with one button press. TB-303-style sawtooth 
 | H | Help overlay |
 | Esc | Close help |
 
-## Building
+## Building (Windows)
 
 ### Requirements
 
@@ -60,6 +67,20 @@ Produces `narina.exe` (~1.7 MB, ~590 KB with UPX).
 upx --best narina.exe
 ```
 
+## macOS (experimental)
+
+A macOS build is available as `narina-macos.dmg` on the [Releases page](https://github.com/basilei0s/NARINA/releases). SDL2 is bundled inside the app.
+
+**Important**: macOS will show "NARINA.app is damaged and can't be opened" because the app is unsigned. To fix, open Terminal and run:
+
+```
+xattr -cr /Applications/NARINA.app
+```
+
+After that it opens normally. This is required for all unsigned macOS apps downloaded from the internet.
+
+To build locally: `brew install sdl2` then `./build_mac.sh`. Uses C fallback for DSP (no NASM on ARM).
+
 ## Architecture
 
 ```
@@ -68,22 +89,18 @@ src/
   audio.c    - Pattern generation, sequencer, percussion, audio callback
   audio.h    - Shared types (DspState, Step, Pattern, Sequencer)
   dsp.asm    - NASM x86-64 DSP core (oscillator, SVF filter, envelopes)
+  dsp.c      - C fallback DSP for non-x86 platforms (macOS ARM)
   narina.rc  - Windows resource file (icon)
 tools/
   gen_icon.c - Generates narina.ico (acid smiley)
-build.bat    - Build script
+build.bat    - Windows build script
+build_mac.sh - macOS build script
 ```
 
-### DSP signal chain (NASM)
+### DSP signal chain
 
 ```
 Sawtooth osc → Frequency slide → Filter envelope → SVF filter (+ tanh saturation) → Amp envelope → Output
-```
-
-### Audio callback flow
-
-```
-DSP block → Waveform copy → Percussion mix → Volume/mute → Record buffer
 ```
 
 ## License
