@@ -22,7 +22,7 @@
 #define BTN_H    35
 
 #define SLIDER_X 250
-#define SLIDER_W (WINDOW_W - SLIDER_X - 60)
+#define SLIDER_W (WINDOW_W - SLIDER_X - 80)
 #define SLIDER_H 8
 #define KNOB_R   7
 
