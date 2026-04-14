@@ -1,4 +1,4 @@
-/* gen_icon.c - Generate a 32x32 yellow acid smiley .ico for Narina */
+/* gen_icon.c - Generate a 32x32 yellow acid smiley .ico for NARINA */
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>

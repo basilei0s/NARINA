@@ -1,4 +1,4 @@
-; dsp.asm - x86-64 NASM DSP core for Narina acid techno synth
+; dsp.asm - x86-64 NASM DSP core for NARINA acid techno synth
 ; Windows x64 calling convention: rcx=1st, rdx=2nd, r8=3rd
 ; Must preserve: rbx, rbp, rdi, rsi, r12-r15, xmm6-xmm15
 

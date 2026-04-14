@@ -1,4 +1,4 @@
-# Claude instructions for Narina
+# Claude instructions for NARINA
 
 Read [AGENTS.md](AGENTS.md) for project architecture, constraints, and conventions.
 

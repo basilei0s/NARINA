@@ -1,8 +1,8 @@
-# Agents guide for Narina
+# Agents guide for NARINA
 
 ## Project overview
 
-Narina is a portable Windows acid techno loop generator. Single .exe, C + SDL2 + NASM x86-64.
+NARINA is a portable Windows acid techno loop generator. Single .exe, C + SDL2 + NASM x86-64.
 
 ## Stack
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# macOS build script for Narina
+# macOS build script for NARINA
 # Requires: Xcode Command Line Tools, SDL2 (brew install sdl2)
 
 CC=${CC:-cc}
