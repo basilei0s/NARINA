@@ -75,6 +75,10 @@ jobs:
           chmod u+w NARINA.app/Contents/Frameworks/libSDL2.dylib
           strip -x NARINA.app/Contents/Frameworks/libSDL2.dylib
           install_name_tool -change "$SDL2_LIB" @executable_path/../Frameworks/libSDL2.dylib NARINA.app/Contents/MacOS/narina
+          # Re-sign after modifications (ad-hoc, no Apple Developer ID needed)
+          codesign --force --sign - NARINA.app/Contents/Frameworks/libSDL2.dylib
+          codesign --force --sign - NARINA.app/Contents/MacOS/narina
+          codesign --force --sign - NARINA.app
           # Info.plist
           cat > NARINA.app/Contents/Info.plist << 'PLIST'
           <?xml version="1.0" encoding="UTF-8"?>
