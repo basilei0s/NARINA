@@ -19,6 +19,6 @@ $CC $CFLAGS -c src/dsp.c -o dsp.o
 
 echo "[4/4] Linking narina ..."
 $CC main.o audio.o dsp.o -o narina $LDFLAGS
+strip narina
 
 echo "Build OK: ./narina"
-echo "Note: SDL2 must be installed (brew install sdl2) or bundled."
