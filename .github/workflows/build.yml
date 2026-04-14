@@ -11,7 +11,7 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install NASM
         run: choco install nasm -y
@@ -38,7 +38,7 @@ jobs:
             -Wl,--gc-sections -static -lsetupapi -lole32 -loleaut32 -limm32 -lversion -lgdi32 -lwinmm -luser32
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: narina-windows
           path: narina.exe
@@ -46,7 +46,7 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install SDL2
         run: brew install sdl2
@@ -85,7 +85,7 @@ jobs:
           hdiutil create -volname "NARINA" -srcfolder NARINA.app -ov -format UDZO narina-macos.dmg
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: narina-macos
           path: narina-macos.dmg
@@ -97,12 +97,12 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: narina-windows
           path: win
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: narina-macos
           path: mac
